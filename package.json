@@ -1,0 +1,29 @@
+{
+  "name": "gescon",
+  "version": "1.0.0",
+  "description": "Aplicacion web destinada a la revision, aceptacion y manejo de articulos, ademas de la organizacion de congresos",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GaboT0/GESCON.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GaboT0/GESCON/issues"
+  },
+  "homepage": "https://github.com/GaboT0/GESCON#readme",
+  "dependencies": {
+    "express-session": "^1.17.2",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "body-parser": "^1.19.2",
+    "express": "^4.17.3",
+    "nodemon": "^2.0.15"
+  }
+}
