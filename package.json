@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/GaboT0/GESCON#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express-session": "^1.17.2",
     "mysql": "^2.18.1"
   },

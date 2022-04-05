@@ -1,12 +1,15 @@
 const express = require("express");
 const mysql = require("mysql");
 const session = require("express-session");
+const cors = require("cors");
 
 /*
 *
 *   Configuración del servidor
 *
 */
+
+
 const connection = mysql.createConnection({
     host : "localhost",
     user : "root",
@@ -15,7 +18,7 @@ const connection = mysql.createConnection({
     
 });
 const bodyParser = require("body-parser");
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3500;
 
 const app = express();
 /**
@@ -27,6 +30,7 @@ app.use(session({
     saveUninitialized: true,
 }))
 app.use(bodyParser.json());
+app.use(cors());
 
 /**
  * Establece la conexión a la base de datos
@@ -64,7 +68,7 @@ app.listen(PORT, ()=> console.log(`Server running on port ${PORT}`));
 /*
 * RUTAS DEL SERVIDOR
 */
-app.post("/articles", (req,res)=>{
+app.post("/articulos", cors(), (req,res)=>{
     // Verifica la sesión para no dar acceso a usuarios no loggeados
     if(!req.session.id_usuario){
         return res.json({
