@@ -88,3 +88,16 @@ exports.authUser = (req, res) => {
         })
     })
 }
+exports.logoutUser = (req, res) => {
+    if (req.session.id_usuario)
+        return res.json({
+            message: "Debe tener una sesión activa",
+            error: false
+        });
+    req.session.regenerate(
+        res.json({
+            message: "ok",
+            error: false
+        })
+    )
+}

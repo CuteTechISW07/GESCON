@@ -29,6 +29,7 @@ const user = require("./controllers/user")
  */
 router.post("/User/createUser", user.createUser)
 router.post("/User/authUser", user.authUser)
+router.post("/User/logout", user.logoutUser)
 
 
 
