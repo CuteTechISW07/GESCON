@@ -1,17 +1,14 @@
 const express = require("express");
-
+const multer = require("multer");
 const session = require("express-session");
 const cors = require("cors");
 const router = require('./router');
+const bodyParser = require("body-parser");
 /*
 *
 *   Configuración del servidor
 *
 */
-
-
-
-const bodyParser = require("body-parser");
 const PORT = process.env.PORT || 3500;
 
 const app = express();
@@ -23,7 +20,16 @@ app.use(session({
     resave: true,
     saveUninitialized: true,
 }))
-app.use(bodyParser.json());
+
+// parse application/json
+app.use(bodyParser.json());                        
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// parse multipart/form-data
+//app.use(multer());
+
 app.use(cors());
 
 
@@ -34,4 +40,4 @@ app.use(cors());
  * 
  */
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-app.use('/', router); //Router para las diferentes rutas del proyecto
+app.use(router); //Router para las diferentes rutas del proyecto

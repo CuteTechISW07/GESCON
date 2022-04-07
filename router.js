@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const user = require("./controllers/user")
-
+const articulos = require("./controllers/articulos");
 /**
  * 
  *  Estructura del objeto sesión:
@@ -27,55 +27,13 @@ const user = require("./controllers/user")
 /**
  * Router User
  */
-router.post("/User/createUser", user.createUser)
-router.post("/User/authUser", user.authUser)
+router.post("/User/createUser", (req,res)=>user.createUser(req,res))
+router.post("/User/authUser", (req,res)=>user.authUser(req,res))
 router.post("/User/logout", user.logoutUser)
 
-
-
-
-
 /**
- * Otro
+ * Router Articulos
  */
-router.post("/articulos", cors(), (req, res) => {
-    // Verifica la sesión para no dar acceso a usuarios no loggeados
-    if (!req.session.id_usuario) {
-        return res.json({
-            message: "Debe tener una sesión activa",
-            error: false
-        });
-    }
+router.post("/articulos", articulos.getArticulos);
 
-    // Verifica que el tipo de usuario sea el correcto, en este caso el líder de comite
-    if (req.session.tipo != 3)
-        return res.json({
-            message: "Permisos denegados",
-            error: false
-        });
-
-
-    // Consulta a la base de datos
-    const query = "SELECT * FROM vw_articulo_version_autor";
-
-    connection.query(query, (err, results) => {
-        if (err)
-            return res.json({
-                message: err.message,
-                error: true
-            });
-
-        if (results.length > 0)
-            res.json({
-                message: "Artículos encontrados",
-                error: false,
-                data: results
-            });
-        else
-            res.json({
-                message: "No hay resultados que mostrar",
-                error: false
-            })
-    });
-
-});
+module.exports = router;
