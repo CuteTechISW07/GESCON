@@ -72,11 +72,12 @@ router.post("/authUser", (req, res) => {
                 });
             }
             if (results.length == 1) {
+
                 req.session.user = {
-                    id_usuario: results.idUsuario,
-                    nombre: results.nombre,
-                    correo: results.correo,
-                    tipo: results.TipoUsuario_idTipoUsuario,
+                    id_usuario: results[0].idUsuario,
+                    nombre: results[0].nombre,
+                    correo: results[0].correo,
+                    tipo: results[0].TipoUsuario_idTipoUsuario,
                 }
                 req.session.save(errSes => {
                     if (errSes)
