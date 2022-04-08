@@ -27,9 +27,7 @@ const articulos = require("./controllers/articulos");
 /**
  * Router User
  */
-router.post("/User/createUser", (req,res)=>user.createUser(req,res))
-router.post("/User/authUser", (req,res)=>user.authUser(req,res))
-router.post("/User/logout", user.logoutUser)
+router.use("/User", user)
 
 /**
  * Router Articulos

@@ -1,11 +1,14 @@
+const router = require("express").Router()
+
+
 const util = require("../util")
-exports.createUser = (req, res) => {
-    if (req.session.id_usuario)
+router.post("/createUser", (req, res) => {
+    if (req.session.user)
         return res.json({
             message: "Debe tener una sesión activa",
             error: false
         });
-    if (req.session.tipo != 6)
+    if (req.session.user.tipo != 6)
         return res.json({
             message: "Permisos denegados",
             error: false
@@ -40,16 +43,16 @@ exports.createUser = (req, res) => {
                 })
         })
     })
-}
-exports.authUser = (req, res) => {
-    console.log(req.session.id_usuario);
-    if (!req.session)
+});
+router.post("/authUser", (req, res) => {
+    console.log(req.session);
+    if (req.session.user)
         return res.json({
             message: "Ya existe una sesion activa",
             error: false
         });
     let correo = req.body.correo;
-    let clave = req.body.clave;  
+    let clave = req.body.clave;
     util.createConnection((errorCon, con) => {
         if (errorCon) {
             console.error(errCon)
@@ -69,17 +72,21 @@ exports.authUser = (req, res) => {
                 });
             }
             if (results.length == 1) {
-                /*req.session.user = {
+                req.session.user = {
                     id_usuario: results.idUsuario,
                     nombre: results.nombre,
                     correo: results.correo,
                     tipo: results.TipoUsuario_idTipoUsuario,
-                }*/
-                req.session.id_usuario = results.idUsuario;
-                res.json({
-                    message: "ok",
-                    error: false,
-                });
+                }
+                req.session.save(errSes => {
+                    if (errSes)
+                        console.error(errSes)
+                    console.log(req.session)
+                    res.json({
+                        message: "ok",
+                        error: false,
+                    });
+                })
             }
             else
                 res.json({
@@ -88,9 +95,9 @@ exports.authUser = (req, res) => {
                 })
         })
     })
-}
-exports.logoutUser = (req, res) => {
-    if (req.session)
+})
+router.all("/logoutUser", (req, res) => {
+    if (req.session.user)
         return res.json({
             message: "Debe tener una sesión activa",
             error: false
@@ -101,4 +108,5 @@ exports.logoutUser = (req, res) => {
             error: false
         })
     )
-}
+})
+module.exports = router;

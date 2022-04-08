@@ -17,12 +17,13 @@ const app = express();
  */
 app.use(session({
     secret: "cutech2022-MSJ",
-    resave: true,
+    resave: false,
     saveUninitialized: true,
+    unset: 'destroy'
 }))
 
 // parse application/json
-app.use(bodyParser.json());                        
+app.use(bodyParser.json());
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
