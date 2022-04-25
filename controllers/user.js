@@ -1,14 +1,9 @@
 const router = require("express").Router()
-
+const jwt = require("jsonwebtoken")
 
 const util = require("../util")
-router.post("/createUser", (req, res) => {
-    if (req.session.user)
-        return res.json({
-            message: "Debe tener una sesión activa",
-            error: false
-        });
-    if (req.session.user.tipo != 6)
+router.post("/createUser", util.agregaTokenPeticion, (req, res) => {
+    if (req.decoded.tipo != 6)
         return res.json({
             message: "Permisos denegados",
             error: false
@@ -44,13 +39,7 @@ router.post("/createUser", (req, res) => {
         })
     })
 });
-router.post("/authUser", (req, res) => {
-    console.log(req.session);
-    if (req.session.user)
-        return res.json({
-            message: "Ya existe una sesion activa",
-            error: false
-        });
+router.post("/authUser", util.revisaSinToken, (req, res) => {
     let correo = req.body.correo;
     let clave = req.body.clave;
     util.createConnection((errorCon, con) => {
@@ -72,22 +61,18 @@ router.post("/authUser", (req, res) => {
                 });
             }
             if (results.length == 1) {
-
-                req.session.user = {
+                let token = jwt.sign({
                     id_usuario: results[0].idUsuario,
                     nombre: results[0].nombre,
                     correo: results[0].correo,
                     tipo: results[0].TipoUsuario_idTipoUsuario,
-                }
-                req.session.save(errSes => {
-                    if (errSes)
-                        console.error(errSes)
-                    console.log(req.session)
-                    res.json({
-                        message: "ok",
-                        error: false,
-                    });
-                })
+                }, "EjuLNG9pt8m5cFZn", {
+                    expiresIn: "30d"
+                });
+                res.send({
+                    message: "ok",
+                    token: token,
+                });
             }
             else
                 res.json({
@@ -96,18 +81,5 @@ router.post("/authUser", (req, res) => {
                 })
         })
     })
-})
-router.all("/logoutUser", (req, res) => {
-    if (req.session.user)
-        return res.json({
-            message: "Debe tener una sesión activa",
-            error: false
-        });
-    req.session.regenerate(
-        res.json({
-            message: "ok",
-            error: false
-        })
-    )
 })
 module.exports = router;

@@ -1,6 +1,5 @@
 const express = require("express");
 const multer = require("multer");
-const session = require("express-session");
 const cors = require("cors");
 const router = require('./router');
 const bodyParser = require("body-parser");
@@ -15,12 +14,6 @@ const app = express();
 /**
  *  Establece el uso de sesiones
  */
-app.use(session({
-    secret: "cutech2022-MSJ",
-    resave: false,
-    saveUninitialized: true,
-    unset: 'destroy'
-}))
 
 // parse application/json
 app.use(bodyParser.json());
