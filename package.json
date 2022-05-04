@@ -19,9 +19,11 @@
   "homepage": "https://github.com/GaboT0/GESCON#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
     "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.4",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "nodemailer": "^6.7.4"
   },
   "devDependencies": {
     "body-parser": "^1.19.2",

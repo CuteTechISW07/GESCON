@@ -3,10 +3,10 @@ const jwt = require("jsonwebtoken")
 
 const pool = mysql.createPool({
     connectionLimit: 20,
-    host: "216.238.68.27",
-    user: "Ares",
-    password: "ugJ9z79Tnv9XmzxZ",
-    database: "Gescon",
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME,
 });
 
 module.exports.createConnection = (callback) => {
@@ -16,7 +16,11 @@ module.exports.createConnection = (callback) => {
      */
 
     pool.getConnection((error, con) => {
-        callback(error, con)
+        if (error) {
+            console.error(error)
+        } else {
+            callback(error, con)
+        }
     })
 }
 module.exports.agregaTokenPeticion = (req, res, next) => {
