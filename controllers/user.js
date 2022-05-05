@@ -107,6 +107,12 @@ router.post("/authUser", util.revisaSinToken, (req, res) => {
                 res.send({
                     message: "ok",
                     token: token,
+                    informacion: {
+                        id_usuario: results[0].idUsuario,
+                        nombre: results[0].nombre,
+                        correo: results[0].correo,
+                        tipo: results[0].TipoUsuario_idTipoUsuario,
+                    }
                 });
             }
             else
@@ -117,4 +123,9 @@ router.post("/authUser", util.revisaSinToken, (req, res) => {
         })
     })
 })
+
+router.post("/decodeJWT", util.revisaSinToken, (req, res) => {
+    res.send(req.decoded)
+})
+
 module.exports = router;
