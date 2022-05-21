@@ -18,15 +18,16 @@ const mailOption = {
     html: "Por favor ingresa el siguiente codigo en Gescon %codigo%"
 }
 router.post("/createUser", util.agregaTokenPeticion, async (req, res) => {
+    
     if (req.decoded.tipo != 6)
         return res.json({
             message: "Permisos denegados",
             error: false
         });
-    let nombre = req.body.nombre;
-    let correo = req.body.correo;
-    let clave = req.body.clave;
-    let tipoUsuario = req.body.tipoUsuario;
+    const nombre = req.body.nombre;
+    const correo = req.body.correo;
+    const clave = req.body.clave;
+    const tipoUsuario = req.body.tipoUsuario;
 
     const codigo = ((min, max) => Math.floor(Math.random() * (max - min)) + min)(100000, 1000000)
 
@@ -34,9 +35,7 @@ router.post("/createUser", util.agregaTokenPeticion, async (req, res) => {
      * POR FAVOR BORRA LO SIGUIENTE:
      */
 
-    mailOption.to = correo;
-    mailOption.html = mailOption.html.replace("%codigo%", codigo)
-    await transporter.sendMail(mailOption)
+    
 
     /**
      * 
@@ -49,7 +48,7 @@ router.post("/createUser", util.agregaTokenPeticion, async (req, res) => {
                 message: err.message,
                 error: true
             });
-        const query = "INSERT INTO Usuario(nombre,correo,clave,TipoUsuario_idTipoUsuario,codigo) VALUES(?,?,?,?,?)"
+        const query = "INSERT INTO Usuario VALUES(null,?,?,?,?,?)"
         con.query(query, [nombre, correo, clave, tipoUsuario, codigo], async (err, results) => {
             con.release();
             if (err)
@@ -58,9 +57,9 @@ router.post("/createUser", util.agregaTokenPeticion, async (req, res) => {
                     error: true
                 });
             if (results.length > 0) {
-                mailOption.to = correo;
-                mailOption.html.replace("%codigo%", codigo)
-                await transporter.sendMail(mailOption)
+                //mailOption.to = correo;
+                //mailOption.html.replace("%codigo%", codigo)
+                //await transporter.sendMail(mailOption)
                 res.json({
                     message: "ok",
                     error: false,
@@ -124,7 +123,7 @@ router.post("/authUser", util.revisaSinToken, (req, res) => {
     })
 })
 
-router.post("/decodeJWT", util.revisaSinToken, (req, res) => {
+router.post("/decodeJWT", util.agregaTokenPeticion, (req, res) => {
     res.send(req.decoded)
 })
 

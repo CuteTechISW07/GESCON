@@ -4,6 +4,7 @@ const multer = require("multer");
 const cors = require("cors");
 const router = require('./router');
 const bodyParser = require("body-parser");
+const fileUpload = require("express-fileupload");
 /*
 *
 *   Configuración del servidor
@@ -22,6 +23,8 @@ app.use(bodyParser.json());
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Para subir archivos
+app.use(fileUpload())
 // parse multipart/form-data
 //app.use(multer());
 

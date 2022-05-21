@@ -30,6 +30,6 @@ router.use("/User", user)
 /**
  * Router Articulos
  */
-router.post("/articulos", articulos.getArticulos);
+router.use("/articulos", articulos);
 
 module.exports = router;

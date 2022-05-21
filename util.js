@@ -25,7 +25,6 @@ module.exports.createConnection = (callback) => {
 }
 module.exports.agregaTokenPeticion = (req, res, next) => {
     const token = req.headers['access-token'];
-
     if (token) {
         jwt.verify(token, "EjuLNG9pt8m5cFZn", (err, decoded) => {
             if (err) {
