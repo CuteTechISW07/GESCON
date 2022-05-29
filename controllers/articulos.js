@@ -47,10 +47,10 @@ router.post("/gestion",util.agregaTokenPeticion ,(req,res)=>{
 
 });
 
-router.post("/newArticle",(req,res)=>{
-    if(req.files.file===null){
+router.post("/newArticle", (req, res) => {
+    if (req.files.file === null) {
         return res.status(400).json({
-            "message" : "No se subió un archivo"
+            "message": "No se subió un archivo"
         });
     }
 
@@ -61,58 +61,112 @@ router.post("/newArticle",(req,res)=>{
 
     var id_articulo = 0;
 
-    util.createConnection((errorCon, con)=>{
-        if(errorCon){
+    util.createConnection((errorCon, con) => {
+        if (errorCon) {
             res.status(500).json({
-                message : "Error en la conexión",
-                error : true,
+                message: "Error en la conexión",
+                error: true,
             });
         }
 
         var query = `INSERT INTO Articulo VALUES (null, '${tema}', '${filename}', ${id_user})`;
-        con.query(query, (err,results)=>{
-            if(err)
+        con.query(query, (err, results) => {
+            if (err)
                 res.status(500).json({
                     message: "Ha ocurrido un error al insertar",
-                    error : true
+                    error: true
                 })
-            
-            if(results.length == 0)
+
+            if (results.length == 0)
                 res.status(500).json({
-                    message : "Ha ocurrido un error",
-                    error : true
+                    message: "Ha ocurrido un error",
+                    error: true
                 })
-            
+
             id_articulo = results.insertId;
 
             query = `INSERT INTO Version VALUES (null, 1, '/static/articles/${filename}', 'SIN COMENTAR', ${id_articulo}, 1, 1)`
-            con.query(query,(err,results)=>{
-                if(err){
+            con.query(query, (err, results) => {
+                if (err) {
                     console.log(err);
                     res.json({
-                        message : "Ha ocurrido un error al insertar",
-                        error : true
+                        message: "Ha ocurrido un error al insertar",
+                        error: true
                     });
                 }
-                if(results.length == 0)
+                if (results.length == 0)
                     res.status(500).json({
-                        message : "Ha ocurrido un error",
-                        error : true
+                        message: "Ha ocurrido un error",
+                        error: true
                     })
             });
         });
     })
 
-    file.mv(`${process.cwd()}/static/articles/${file.name}`,err=>{
-        if(err){
+    file.mv(`${process.cwd()}/static/articles/${file.name}`, err => {
+        if (err) {
             console.error(err);
             return res.status(500).send(err);
         }
     });
 
     res.status(200).json({
-        message : "Archivo subido de forma correcta",
-        error : false,
+        message: "Archivo subido de forma correcta",
+        error: false,
+    })
+})
+
+router.get("/:status", (req, res) => {
+    const { status } = req.params;
+
+    util.createConnection((errorCon, con) => {
+        if (errorCon) {
+            res.status(500).json({
+                message: "Error en la conexión",
+                error: true,
+            });
+        }
+
+        //var query = `SELECT * FROM Estado`;
+        /* 
+                        <th scope='col'>#</th>
+                        <th scope='col'>Articulo</th>
+                        <th scope='col'>Versión</th>
+                        <th scope='col'>Autor</th>
+        
+        */
+        //INSERT INTO Articulo VALUES (null, '${tema}', '${filename}', ${id_user})
+        var query = `SELECT A.idArticulo,A.Tema,V.archivo,V.numeroversion,U.nombre,V.idVersion FROM Articulo A JOIN Usuario U ON A.Usuario_idUsuario=U.idUsuario JOIN Version V ON A.idArticulo=V.Articulo_idArticulo AND V.Estado_idEstado=${status}`;
+        con.query(query, (err, results) => {
+            if (err)
+                res.status(500).json({
+                    message: "Ha ocurrido un error consultando la BD",
+                    error: true
+                })
+            res.status(200).json(results);
+        });
+    })
+})
+
+router.post("/setState", (req, res) => {
+    const { idVersion, newState } = req.body;
+    util.createConnection((errorCon, con) => {
+        if (errorCon) {
+            res.status(500).json({
+                message: "Error en la conexión",
+                error: true,
+            });
+        }
+
+        var query = `UPDATE Version SET Estado_idEstado=${newState} WHERE idVersion=${idVersion}`;
+        con.query(query, (err, results) => {
+            if (err)
+                res.status(500).json({
+                    message: "Ha ocurrido un error consultando la BD",
+                    error: true
+                })
+            res.status(200).json(results);
+        });
     })
 })
 
