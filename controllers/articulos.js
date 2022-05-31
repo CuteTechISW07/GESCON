@@ -116,8 +116,14 @@ router.post("/newArticle", (req, res) => {
     })
 })
 
-router.get("/:status", (req, res) => {
+router.get("/:status",util.agregaTokenPeticion ,(req, res) => {
     const { status } = req.params;
+
+    if (!(req.decoded.tipo == 6 || req.decoded.tipo == 4))
+        return res.json({
+            message: "Permisos denegados",
+            error: false
+        });
 
     util.createConnection((errorCon, con) => {
         if (errorCon) {
@@ -148,7 +154,13 @@ router.get("/:status", (req, res) => {
     })
 })
 
-router.post("/setState", (req, res) => {
+router.post("/setState",util.agregaTokenPeticion ,(req, res) => {
+    if (!(req.decoded.tipo == 6 || req.decoded.tipo == 4))
+        return res.json({
+            message: "Permisos denegados",
+            error: false
+        });
+
     const { idVersion, newState } = req.body;
     util.createConnection((errorCon, con) => {
         if (errorCon) {
@@ -165,7 +177,10 @@ router.post("/setState", (req, res) => {
                     message: "Ha ocurrido un error consultando la BD",
                     error: true
                 })
-            res.status(200).json(results);
+            res.status(200).json({
+                message : "Estatus actualizado con exito",
+                error : false
+            });
         });
     })
 })
