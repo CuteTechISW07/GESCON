@@ -119,7 +119,7 @@ router.post("/newArticle", (req, res) => {
 router.get("/:status",util.agregaTokenPeticion ,(req, res) => {
     const { status } = req.params;
 
-    if (!(req.decoded.tipo == 6 || req.decoded.tipo == 4))
+    if (!(req.decoded.tipo == 6 || req.decoded.tipo == 3))
         return res.json({
             message: "Permisos denegados",
             error: false
@@ -155,7 +155,9 @@ router.get("/:status",util.agregaTokenPeticion ,(req, res) => {
 })
 
 router.post("/setState",util.agregaTokenPeticion ,(req, res) => {
-    if (!(req.decoded.tipo == 6 || req.decoded.tipo == 4))
+    console.log(req.decoded.tipo)
+    
+    if (!(req.decoded.tipo == 6 || req.decoded.tipo == 3))
         return res.json({
             message: "Permisos denegados",
             error: false
