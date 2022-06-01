@@ -187,4 +187,48 @@ router.post("/setState",util.agregaTokenPeticion ,(req, res) => {
     })
 })
 
+router.post("/consrev",util.agregaTokenPeticion ,(req,res)=>{
+    // Verifica la sesión para no dar acceso a usuarios no loggeados
+    if (!(req.decoded.tipo == 6 || req.decoded.tipo == 1))
+        return res.json({
+            message: "Permisos denegados",
+            error: false
+        });
+
+
+    // Consulta a la base de datos
+    const query = `SELECT * FROM vw_articulo_version_autor WHERE id_usuario = ${req.decoded.id_usuario}`;
+    
+    util.createConnection((errorCon, con)=>{
+        if(errorCon){
+            res.json({
+                status: 500,
+                error : true,
+                message : "Ha ocurrido un error"
+            })
+        }
+        con.query(query, (err, results) => {
+            if (err)
+                return res.json({
+                    message: err.message,
+                    error: true
+                });
+    
+            if (results.length > 0)
+                res.json({
+                    message: "Artículos encontrados",
+                    error: false,
+                    data: results
+                });
+            else
+                res.json({
+                    message: "No hay resultados que mostrar",
+                    error: false
+                })
+            
+        });
+    })
+    
+});
+
 module.exports = router;
