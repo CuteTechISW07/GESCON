@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const user = require("./controllers/user")
 const articulos = require("./controllers/articulos");
+const revisores = require("./controllers/revisores");
 /**
  * 
  *  Estructura del objeto jwt:
@@ -31,5 +32,10 @@ router.use("/User", user)
  * Router Articulos
  */
 router.use("/articulos", articulos);
+
+/**
+ * Router revisores
+ */
+router.use("/revisores", revisores);
 
 module.exports = router;

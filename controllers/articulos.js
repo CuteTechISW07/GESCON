@@ -72,13 +72,13 @@ router.post("/newArticle", (req, res) => {
         var query = `INSERT INTO Articulo VALUES (null, '${tema}', '${filename}', ${id_user})`;
         con.query(query, (err, results) => {
             if (err)
-                res.status(500).json({
+                res.json({
                     message: "Ha ocurrido un error al insertar",
                     error: true
                 })
 
             if (results.length == 0)
-                res.status(500).json({
+                res.json({
                     message: "Ha ocurrido un error",
                     error: true
                 })
@@ -95,7 +95,7 @@ router.post("/newArticle", (req, res) => {
                     });
                 }
                 if (results.length == 0)
-                    res.status(500).json({
+                    res.json({
                         message: "Ha ocurrido un error",
                         error: true
                     })
