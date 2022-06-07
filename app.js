@@ -25,6 +25,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Para subir archivos
 app.use(fileUpload())
+
+app.use('/static',express.static('static'));
 // parse multipart/form-data
 //app.use(multer());
 
