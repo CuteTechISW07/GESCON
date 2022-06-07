@@ -85,7 +85,7 @@ router.post("/newArticle", (req, res) => {
 
             id_articulo = results.insertId;
 
-            query = `INSERT INTO Version VALUES (null, 1, '/static/articles/${filename}', 'SIN COMENTAR', ${id_articulo}, 1, 1)`
+            query = `INSERT INTO Version VALUES (null, 1, '/static/articles/${filename}', 'SIN COMENTAR', ${id_articulo}, 1, 1, 7)`
             con.query(query, (err, results) => {
                 if (err) {
                     console.log(err);
