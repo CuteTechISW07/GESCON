@@ -132,4 +132,40 @@ router.get("/myArticles",util.agregaTokenPeticion,(req,res)=>{
     })
 });
 
+router.post("/evaluar",util.agregaTokenPeticion,(req,res)=>{
+    if(!(req.decoded.tipo==2 || req.decoded.tipo==6)){
+        res.json({
+            message : "Permisos denegados",
+            error : false
+        });
+    }
+
+    const {comment, id_version, estatus} = req.body;
+
+    util.createConnection((errorCon,con)=>{
+        if(errorCon){
+            res.json({
+                message : "Ha ocurrido un error conectando con la base",
+                error : true
+            })
+        }
+
+        const query = `UPDATE Version SET comentario = '${comment}', Estado_idEstado = ${estatus} WHERE idVersion = ${id_version}`;
+
+        con.query(query,(err, results)=>{
+            if(err){
+                res.json({
+                    message: "Ha ocurrido un error actualizando el estado del artículo",
+                    error : true
+                })
+            }
+
+            res.json({
+                message : "Se ha completado la revisión correctamente",
+                error: false
+            })
+        })
+    });
+})
+
 module.exports = router;
